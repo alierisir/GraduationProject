@@ -1,0 +1,19 @@
+* {
+    font-family: Arial, Helvetica, sans-serif;
+}
+
+.dark-gray {
+    background-color: rgb(196, 196, 196);
+}
+
+
+.task p {
+    border: solid 1px gainsboro;
+    padding: 0.4rem;
+    transition: background-color 0.2s ease-in-out;
+}
+
+.task p:hover {
+    cursor: pointer;
+    background-color: gainsboro;
+}

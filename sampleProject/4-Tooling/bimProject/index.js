@@ -8,5 +8,10 @@ const viewer = new IfcViewerAPI({ container, backgroundColor: new Color(0xffffff
 viewer.grid.setGrid();
 viewer.axes.setAxes();
 
+//5.1 Base IFC Viewer
 const url="./samples/01.ifc"
 viewer.IFC.loadIfcUrl(url)
+
+//5.2 Selection and Pre-Selection feature
+window.ondblclick = async () => await viewer.IFC.selector.pickIfcItem();
+window.onmousemove = async () => await viewer.IFC.selector.prePickIfcItem();

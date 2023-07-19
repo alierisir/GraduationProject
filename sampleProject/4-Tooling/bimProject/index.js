@@ -1,4 +1,4 @@
-import { Color } from 'three';
+import { Color, LineBasicMaterial, MeshBasicMaterial} from 'three';
 import { IfcViewerAPI } from 'web-ifc-viewer';
 import {
     IFCWALLSTANDARDCASE,
@@ -24,11 +24,51 @@ loadIfc(url)
 
 async function loadIfc(url) {
     const model = await viewer.IFC.loadIfcUrl(url);
-    model.removeFromParent()
     const ifcProject = await viewer.IFC.getSpatialStructure(model.modelID);
     createTreeMenu(ifcProject);
     await setupAllCategories()
+    // Setup camera controls
+	const controls = viewer.context.ifcCamera.cameraControls;
+	controls.setPosition(7.6, 4.3, 24.8, false);
+	controls.setTarget(-7.1, -0.3, 2.5, false);
 
+	// Generate all plans
+	await viewer.plans.computeAllPlanViews(model.modelID);
+
+	const lineMaterial = new LineBasicMaterial({ color: 'black' });
+	const baseMaterial = new MeshBasicMaterial({
+		polygonOffset: true,
+		polygonOffsetFactor: 1, // positive value pushes polygon further away
+		polygonOffsetUnits: 1,
+	});
+	await viewer.edges.create('example', model.modelID, lineMaterial, baseMaterial);
+    // Floor plan viewing
+
+	const allPlans = viewer.plans.getAll(model.modelID);
+
+	const container = document.getElementById('button-container');
+
+	for (const plan of allPlans) {
+		const currentPlan = viewer.plans.planLists[model.modelID][plan];
+		console.log(currentPlan);
+
+		const button = document.createElement('button');
+		container.appendChild(button);
+		button.textContent = currentPlan.name;
+		button.onclick = () => {
+			viewer.plans.goTo(model.modelID, plan);
+			viewer.edges.toggle('example', true);
+		};
+	}
+
+	const button = document.createElement('button');
+	container.appendChild(button);
+	button.textContent = 'Exit';
+	button.onclick = () => {
+		viewer.plans.exitPlanView();
+		viewer.edges.toggle('example', false);
+	};
+    model.removeFromParent()
 }
 
 //5.2 Selection and Pre-Selection feature

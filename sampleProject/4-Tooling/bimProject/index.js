@@ -72,8 +72,9 @@ async function loadIfc(url) {
 }
 
 //5.2 Selection and Pre-Selection feature
-window.ondblclick = async () => await viewer.IFC.selector.pickIfcItem();
-window.onmousemove = async () => await viewer.IFC.selector.prePickIfcItem();
+window.ondblclick = async () => {
+    viewer.dimensions.create()
+}
 
 //5.3 IFC Properties
 window.onkeydown = async (event) => {
@@ -88,7 +89,20 @@ window.onkeydown = async (event) => {
         createPropertiesMenu(props); //instead of console.log we create a new function that creates menu
         }
         
-    };
+    }else if(event.key ==="q"||event.key==="Q"){
+        toggleDimensions()
+    }else if(event.key ==="x"||event.key==="X")
+        viewer.dimensions.deleteAll()
+}
+
+function toggleDimensions() {
+    if(viewer.dimensions.active === true && viewer.dimensions.previewActive === true){
+        viewer.dimensions.active = false;
+        viewer.dimensions.previewActive = false;
+    }else if(viewer.dimensions.active === false && viewer.dimensions.previewActive === false){
+        viewer.dimensions.active = true;
+        viewer.dimensions.previewActive = true;
+    }
 }
 
 // Properties menu creation

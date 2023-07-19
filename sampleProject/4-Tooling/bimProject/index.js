@@ -226,23 +226,3 @@ function setupCheckBox(category) {
 		else subset.removeFromParent();
 	});
 }
-
-//5.6 Multithreading
-async function setUpMultiThreading() {
-    const manager = ifcLoader.ifcManager;
-    // These paths depend on how you structure your project
-    await manager.useWebWorkers(true, '../IFCWorker.js');
-}
-
-setUpMultiThreading();
-
-function setupProgressNotification() {
-    const text = document.getElementById('progress-text');
-    ifcLoader.ifcManager.setOnProgress((event) => {
-      const percent = event.loaded / event.total * 100;
-        const result = Math.trunc(percent);
-        text.innerText = result.toString();
-    });
-}
-
-setupProgressNotification();
